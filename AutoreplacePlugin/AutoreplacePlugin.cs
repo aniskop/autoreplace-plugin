@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 namespace Autoreplace
 {
 
-    public delegate string IdeGetPersonalPrefSets();
+    public delegate IntPtr IdeGetPersonalPrefSets();
 
-    public delegate string IdeGetPrefAsString(int pluginId, string prefSet, string name, string defaultValue);
+    public delegate IntPtr IdeGetPrefAsString(int pluginId, string prefSet, string name, string defaultValue);
 
     [return: MarshalAs(UnmanagedType.Bool)]
     public delegate bool IdeGetPrefAsBool(int pluginId, string prefSet, string name, [MarshalAs(UnmanagedType.Bool)] bool defaultValue);
@@ -17,7 +17,7 @@ namespace Autoreplace
     [return: MarshalAs(UnmanagedType.Bool)]
     public delegate bool IdeExecuteTemplate(string templateName, [MarshalAs(UnmanagedType.Bool)] bool newWindow);
 
-    public delegate string IdeGetText();
+    public delegate IntPtr IdeGetText();
 
     [return: MarshalAs(UnmanagedType.Bool)]
     public delegate bool IdeSetText(string text);
@@ -31,7 +31,7 @@ namespace Autoreplace
     [return: MarshalAs(UnmanagedType.Bool)]
     public delegate bool IdeGetReadOnly();
 
-    public delegate string IdeGetGeneralPref(string name);
+    public delegate IntPtr IdeGetGeneralPref(string name);
 
     /// <summary>
     /// PL/SQL Developer plug-in to unwrap wrapped PL/SQL program units.
@@ -195,7 +195,7 @@ namespace Autoreplace
 
         public void InsertText(string text)
         {
-            string currentText = getTextCallback();
+            string currentText = Marshal.PtrToStringAnsi(getTextCallback());
             int cursorColumn = getCursorXCallback();
             int cursorRow = getCursorYCallback();
 
@@ -274,7 +274,7 @@ namespace Autoreplace
         {
             get
             {
-                return getGeneralPrefCallback("AutoReplaceFilename");
+                return Marshal.PtrToStringAnsi(getGeneralPrefCallback("AutoReplaceFilename"));
             }
 
         }
@@ -283,7 +283,7 @@ namespace Autoreplace
         {
             get
             {
-                string enabled = getGeneralPrefCallback("AutoReplaceEnabled");
+                string enabled = Marshal.PtrToStringAnsi(getGeneralPrefCallback("AutoReplaceEnabled"));
                 return (TRUE.Equals(enabled, StringComparison.InvariantCultureIgnoreCase));
             }
 
